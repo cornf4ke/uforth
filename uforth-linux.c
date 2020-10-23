@@ -56,10 +56,6 @@ rl_gets ()
   return (line_read);
 }
 
-void rxgetline(char* str) {
-  fgets(str,128,stdin);
-}
-
 void txc(uint8_t c) {
   fputc(c, OUTFP);
   fflush(OUTFP);
@@ -72,27 +68,21 @@ void txs(char* s, int cnt) {
 #define txs0(s) txs(s,strlen(s))
 
 static FILE *cfp;
-bool config_open_w(char* f) {
-  cfp = fopen(f, "w+");
-  return (cfp != NULL);
-}
 
 bool config_open_r(char* f) {
   cfp = fopen(f, "r");
   return (cfp != NULL);
 }
 
-bool config_write(char *src, uint16_t size) {
-  fwrite((char*)src, size, 1, cfp);
+bool config_read(void *dest) {
+  uint16_t size;
+  if (!fscanf(cfp, "%d\n", (int*)&size)
+      || !fread((char*)dest, size, 1, cfp)) {
+    return 0;
+  }
   return 1;
 }
 
-bool config_read(void *dest) {
-  uint16_t size;
-  fscanf(cfp,"%d\n",(int*)&size);
-  fread((char*)dest, size, 1, cfp);
-  return 1;
-}
 bool config_close(void) {
   fclose(cfp);
   return 1;
@@ -113,7 +103,7 @@ uforth_stat c_handle(void) {
     {
       typedef DCELL (*arbitrary)();
       arbitrary my_function;
-      *(DCELL*)(&my_function) = dpop();
+      my_function = (arbitrary)dpop();
       DCELL pcnt;
       pcnt = dpop();		/* parameter count */
       switch (pcnt) {
@@ -194,7 +184,9 @@ uforth_stat c_handle(void) {
     {
       char b;
       r2=dpop();
-      read(r2,&b,1);
+      if (!read(r2, &b, 1)) {
+        b = 0;
+      }
       dpush(b);
     }
     break;
@@ -294,11 +286,9 @@ void interpret_from(FILE *fp) {
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#define MAX_DICT_CELLS (65535)
-
 int main(int argc, char* argv[]) {
 
-  dict = malloc(sizeof(CELL)*MAX_DICT_CELLS) + sizeof(struct dict);
+  dict = malloc(sizeof(CELL)*MAX_DICT_CELLS + sizeof(struct dict));
   dict->version = DICT_VERSION;
   dict->word_size = sizeof(uint64_t);
   dict->max_cells = MAX_DICT_CELLS;

@@ -3,13 +3,17 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#ifndef INLINE
 #define INLINE
+#endif
 
 /* 
    The Dictionary: Max is 64K words (64KB * 2)
    Note: A Dictionary CELL is 2 bytes.
 */
+#ifndef MAX_DICT_CELLS
 #define MAX_DICT_CELLS 		(16384)
+#endif
 
 /*
   The dictionary is stored as 16 bit ints, so endianess matters.

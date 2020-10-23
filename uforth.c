@@ -96,6 +96,7 @@ INLINE uint32_t abs32(int32_t v) {
 #include <math.h>
 #endif
 DCELL parse_num(char *s, uint8_t base) {
+  (void)base;
 #ifdef SUPPORT_FLOAT_FIXED
   double f;
   char *p = s;
@@ -509,7 +510,7 @@ uforth_stat exec(CELL wd_idx, bool toplevelprim,uint8_t last_exec_rdix) {
       dpush(VAR_ALLOT_1());
       break;
     case DEF:
-      uforth_iram->compiling = 1;
+      uforth_iram->compiling = 1; __attribute__((fallthrough));
     case _CREATE:
       dict_start_def();
       uforth_next_word();

@@ -1,9 +1,8 @@
 CC=gcc
-CFLAGS=-Wall -g -lm -rdynamic -DINLINE
+CFLAGS=-Wall -Wextra -O2 -rdynamic -DMAX_DICT_CELLS="(65535)"
 LDFLAGS= -g -lm -ldl
-# LDFLAGS= -O2 -lm
 
-SRCS=	uforth.c  uforth-ext.c  utils.c 
+SRCS= uforth.c uforth-ext.c utils.c 
 HDRS= uforth.h uforth-ext.h
 OBJS= uforth-ext.o uforth.o utils.o
 
@@ -27,4 +26,4 @@ depend:
 	makedepend -- $(CFLAGS) -- $(SRCS)
 
 clean:
-	-rm -f *.o *.exe *~ *.stackdump *.aft-TOC uforth
+	-rm -f *.o *.exe uforth.img* uforth-linux *~ *.stackdump *.aft-TOC uforth

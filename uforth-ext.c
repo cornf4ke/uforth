@@ -52,7 +52,7 @@ uforth_stat c_ext_handle_cmds(CELL n) {
       char num[12];
       i32toa(dpop32(),num,uforth_uram->base);
       PAD_STRLEN=strlen(num);
-      memcpy(PAD_STR, num, PAD_SIZE);
+      memcpy(PAD_STR, num, PAD_STRLEN);
       dpush(PAD_ADDR);
     }
     break;
