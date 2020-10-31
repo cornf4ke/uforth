@@ -13,9 +13,6 @@
 
 FILE *OUTFP;
 
-#define CONFIG_IMAGE_FILE "uforth.img"
-
-
 /*
 #define INITIAL_DICT {DICT_VERSION, MAX_DICT_CELLS, 0, 0, 1, {0}}
 struct dict ramdict = INITIAL_DICT;
